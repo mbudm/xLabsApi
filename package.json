@@ -1,0 +1,37 @@
+{
+    "name": "xLabs-api",
+    "version": "0.1.0",
+    "description": "Interface for xLabs Gaze Tracking Chrome Extension",
+    "main": "xLabsApi.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/mbudm/xLabsApi.git"
+    },
+    "keywords": [
+        "xlabs",
+        "api",
+				"gaze-tracking",
+				"chrome",
+        "browser",
+        "amd"
+    ],
+    "author": {
+        "name": "Dave Rawlinson",
+        "email": "dave@xlabs.com.au",
+        "url": "http://xlabsgaze.com/"
+    },
+    "license": "Unlicense",
+    "readmeFilename": "README.md",
+    "bugs": {
+        "url": "https://github.com/mbudm/xLabsApi/issues"
+    },
+    "devDependencies": {
+        "uglify-js": "*",
+        "mocha": "*",
+        "chai": "*",
+				"sinon": "*"
+    }
+}
