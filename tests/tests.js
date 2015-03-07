@@ -17,8 +17,8 @@
     // Configure the tests
     suite('xLabsApi', function() {
         var api,
-						readyCallback = function(){},
-						updateCallback = function(data){};
+						readySpy = sinon.spy(),
+						updateSpy = sinon.spy();
 
         setup(function() {
             api = xLabsApi;
@@ -29,16 +29,21 @@
         });
 				
 		    test('setup on ready', function(done){
-					var readySpy = sinon.spy(readyCallback);
+					api.setup(this, readySpy, updateSpy);
 					
-					api.setup(this, readyCallback, updateCallback);
-					
-					assert.isTrue(readySpy.called);
-					setTimeout(done, 300);
+					var intv = setInterval(function(){
+						if(readySpy.called){
+							assert.isTrue(readySpy.called);
+							done();
+							clearInterval(intv);
+						}
+					}, 50);
 				});
-				test('setup update', function(){
-					var updateSpy = sinon.spy(updateCallback);
-					assert.isTrue(updateSpy.called);
+				test('setup update', function(done){
+					setTimeout(function(){
+						assert.isTrue(updateSpy.called);
+						done();
+					},500);
 				});
     		test('mode is off', function(){
 					var mode = api.getConfig('system.mode');
@@ -46,21 +51,27 @@
 				});
 				test('tracking is suspended', function(){
 					var trackingSuspended = api.getConfig('state.trackingSuspended');
-						assert.strictEqual(trackingSuspended,'0');
+						assert.strictEqual(trackingSuspended,'1');
 				});
-   		 	test('set mode to training', function(){
+   		 	test('set mode to training', function(done){
 					api.setConfig( "system.mode", "training" );
-					var mode = api.getConfig('system.mode');
-					assert.strictEqual(mode,'training');
+					var intv = setInterval(function(){
+						var mode = api.getConfig('system.mode');
+						if(mode === "training"){
+							assert.strictEqual(mode,'training');
+							done();
+							clearInterval(intv);
+						}
+					}, 50);
 				});
     		test('get head values', function(){
 					var head = api.getConfig('state.head');
 					assert.isObject(head,'head is object');
-					assert.isNumber(head.x,'head x is number');
-					assert.isNumber(head.y,'head y is number');
-					assert.isNumber(head.roll,'head roll is number');
-					assert.isNumber(head.pitch,'head pitch is number');
-					assert.isNumber(head.yaw,'head yaw is number');
+					assert.isNumber(parseFloat(head.x),'head x is number');
+					assert.isNumber(parseFloat(head.y),'head y is number');
+					assert.isNumber(parseFloat(head.roll),'head roll is number');
+					assert.isNumber(parseFloat(head.pitch),'head pitch is number');
+					assert.isNumber(parseFloat(head.yaw),'head yaw is number');
 				});
     		test('truth', function(){
 					var truthEnabled = api.getConfig('truth.enabled');
@@ -80,8 +91,19 @@
     		test('get gaze values', function(){
 					var gazeEstimate = api.getConfig('state.gaze.estimate');
 					assert.isObject(gazeEstimate,'gaze.estimate is object');
-					assert.isNumber(gazeEstimate.x,'gaze.estimate  x is number');
-					assert.isNumber(gazeEstimate.y,'gaze.estimate  y is number');
+					assert.isNumber(parseFloat(gazeEstimate.x),'gaze.estimate  x is number');
+					assert.isNumber(parseFloat(gazeEstimate.y),'gaze.estimate  y is number');
+				});
+   		 	test('set mode to off', function(done){
+					api.setConfig( "system.mode", "off" );
+					var intv = setInterval(function(){
+						var mode = api.getConfig('system.mode');
+						if(mode === "off"){
+							assert.strictEqual(mode,'off');
+							done();
+							clearInterval(intv);
+						}
+					}, 50);
 				});
 		});
     // Execute the tests.

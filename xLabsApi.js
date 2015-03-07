@@ -229,7 +229,8 @@
     setConfig:setConfig,
     getDocumentOffset:documentOffset, //better name for getter
     setTruthEnabled:setTruthEnabled,
-    setTruthScreen:setTruthScreen
+    setTruthScreen:setTruthScreen,
+		calibrate:calibrate
   };
   
   // Expose the class either via AMD, CommonJS or the global object
